@@ -9,7 +9,7 @@ define('HTML_EXT', '.html');
 
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
-define('DB_PASS', 'drp72TuKr1sE52kMs');
+define('DB_PASS', '111111');
 define('DB_NAME', 'forum');
 
 
