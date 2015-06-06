@@ -37,6 +37,7 @@ public static function selectDB($dbname = '') {
         throw new Exception("Database $dbname does not exist");
     
     return mysql_select_db($dbname);
+    
 }
 
 /**
