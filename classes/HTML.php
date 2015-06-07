@@ -93,8 +93,26 @@ class HTML {
         $form .= ">";
         
         echo $form;
-        
-  
-        
+       
     }
+    
+  public static function input_textarea($cols = 0, $rows = 0, $name = '') {
+      
+      $return = "<textarea";
+      
+      if (!empty($cols))
+          $return .= " cols=$cols ";
+      
+      if (!empty($rows))
+          $return .= " rows=$rows ";
+      
+      if (!empty($name))
+          $return .= " name=$name ";
+      
+      echo $return;
+      
+  }
+    
 }
+
+?>
