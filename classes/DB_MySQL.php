@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Класс для работы с MySQL
+ * 
+ * @category DB
+ * @package DB_MySQL
+ */
 class DB_MySQL extends Db {
 
 /**
@@ -138,6 +144,22 @@ public static function select($table, $fields = '', $where = '', $and = true) {
 }
 
 /**
+ * Удаляет таблицу из базы данных. Если такой таблицы не существует, возвращается исключение. 
+ * Функция возвращает результат работы функции Db::wasError(), которая определяет, была ли ошибка при выполнении последнего запроса
+ * 
+ * @param string $table Таблица, подлежащая удалению
+ * @return boolean
+ * @throws Exception
+ */
+public static function delete($table) {
+    if (!DB_MySQL::tableExists($table))
+        throw new Exception("Таблицы $table не существует");
+    
+    DB_MySQL::query("DROP TABLE ". $table);
+    return Db::wasError();
+}
+
+/**
  * Функция-обёртка. Возвращает кол-во затронутых строк в результате запроса к БД.
  * 
  * @return integer
@@ -241,4 +263,64 @@ public static function fetchFields() {
    
 }
 
+/**
+ * Функция ищет первичный ключ в таблице $table. В случае успеха возвращает имя поля первичного ключа. В противном случае, или если первичного ключа
+ * нет, возвращает false
+ * 
+ * @param string $table Таблица, в которой производим поиск
+ * @return mixed
+ * @throws Exception
+ */
+public static function findPK($table) {
+    
+    if (!DB_MySQL::tableExists($table))
+        throw new Exception("Таблицы не существует!");
+    
+    DB_MySQL::select($table);
+    $fields = DB_MySQL::fetchFields();
+    $field_count = count($fields);
+    
+    for ($i = 0; $i <= $field_count; $i++) {
+        if ($fields[$i]['primary_key'] == 1) {
+            return $fields[$i]['name'];
+            break;
+        }
+    }
+    
+    return false;
 }
+
+/**
+ * Ищет запись в таблице по значению первичного ключа. Если указан параметр $returnValue, функция возвратит элемент массива с этим ключом, иначе говоря - 
+ * определенное поле. В противном случае возвратится вся строка.
+ * 
+ * @param string $table Таблица, которая участвует в поиске
+ * @param integer $pkValue Значение первичного ключа
+ * @param string $returnValue Ключ элемента массива, который необходимо вернуть
+ * 
+ * @return mixed
+ */
+public static function findRowByPK($table, $pkValue, $returnValue = '') {
+    
+   $pk = DB_MySQL::findPK($table);
+   DB_MySQL::select($table, '', array($pk => $pkValue));
+   
+   $result = DB_MySQL::fetch();
+   
+   if (!empty($returnValue)) {
+       
+       if (array_key_exists($returnValue, $result))
+               return $result[$returnValue];
+       else
+                return $result;
+   }
+   
+   else {
+       return $result;
+   }
+   
+}
+
+}
+
+?>

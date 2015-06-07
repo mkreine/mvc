@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Базовый класс работы с базами данных
+ * 
+ * @category Database
+ * @package Db
+ */
 class Db {
   
     public static $connection_data;
@@ -19,6 +25,10 @@ class Db {
         Db::$connection_data['user'] = DB_USER;
         Db::$connection_data['pass'] = DB_PASS;
         Db::$connection_data['dbname'] = DB_NAME;
+     }
+     
+     public static function wasError() {
+         return (empty(Db::$last_error)) ? true : false;
      }
      
      

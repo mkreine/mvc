@@ -18,7 +18,7 @@ class HTML {
      * 
      * @return void
      */
-    public static function input_text($name = '', $type = '', $size = 0, $maxlength = 0) {
+    public static function input_text($name = '', $type = '', $size = 0, $maxlength = 0, $value = '') {
         
         if (!empty($type))
             $return = "<input type=\"text\"";
@@ -34,6 +34,9 @@ class HTML {
         
         if (!empty($maxlength))
             $return .= " maxlength=$maxlength";
+        
+        if (!empty($value))
+            $return .= " value=\"$value\"";
         
         $return .= " />";
         
@@ -70,10 +73,10 @@ class HTML {
      */
     public static function begin_form($action = '', $method = '', $enctype = '', $name = '', $target = '') {
         
-        $form = "<form ";
+        $form = "<form";
         
         if (!empty($name))
-            $form .= "name = \"$name\" ";
+            $form .= " name = \"$name\" ";
         
         if (!empty($action))
             $form .= "action = \"$action\" ";
