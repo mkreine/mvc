@@ -112,6 +112,49 @@ class HTML {
       echo $return;
       
   }
+  
+  public static function include_css($file) {
+      
+      $ext = substr($file, 0, -3);
+      if ($ext !== 'css')
+          throw new Exception("Это не CSS файл");
+      
+      echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"$file\">";
+  }
+  
+  public static function set_title($title) {
+      
+      if (!empty($title))
+          echo "<title>$title</title>";
+  }
+  
+  public static function set_description($description) {
+      
+      if (!empty($description))
+          echo "<meta name=\"description\" content=$description />";
+  }
+  
+  public static function set_keywords(array $keywords) {
+      
+      if (!empty($keywords)) {
+          
+          $keywords_string = implode(", ", $keywords);
+          echo "<meta name=\"keywords\" content=$keywords_string />";
+      }
+  }
+  
+  public static function include_js($file) {
+      
+      $ext = substr($file, 0, -2);
+      if ($ext !== 'js')
+          throw new Exception("Файл не является скриптом JavaScript");
+      
+      echo "<script language=\"JavaScript\" src=\"$file\"></script>";
+  }
+  
+  
+  
+  
     
 }
 
