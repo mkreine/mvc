@@ -14,8 +14,8 @@ class Router extends Base {
 	    throw new Exception("Malformed url!");
 	}
 
-	if (file_exists(CONTROLLERS_PATH . $controller  . PHP_EXT)) {
-	    require_once (CONTROLLERS_PATH . $controller  . PHP_EXT);
+	if (file_exists(Base::getControllersPath() . $controller  . Base::getPHPExt())) {
+	    require_once (Base::getControllersPath() . $controller  . Base::getPHPExt());
 	    
 	    unset($url['controller']);
 	    unset($url['action']);
@@ -42,7 +42,7 @@ class Router extends Base {
 	    }
 	}
 	else {
-	    throw new Exception("Cannot require controller $full_controller! No such file could be found!");
+	    throw new Exception("Cannot require controller $controller! No such file could be found!");
 	}
     }
 

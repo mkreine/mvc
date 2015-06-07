@@ -6,7 +6,7 @@
  * @category Database
  * @package Db
  */
-class Db {
+class Db extends Base{
   
     public static $connection_data;
     
@@ -21,10 +21,13 @@ class Db {
     public static $last_error_num;
     
     public static function initValues() {
-        Db::$connection_data['host'] = DB_HOST;
-        Db::$connection_data['user'] = DB_USER;
-        Db::$connection_data['pass'] = DB_PASS;
-        Db::$connection_data['dbname'] = DB_NAME;
+        
+        $db_values = Base::read_config_file('db');
+        
+        Db::$connection_data['host'] = $db_values['host'];
+        Db::$connection_data['user'] = $db_values['user'];
+        Db::$connection_data['pass'] = $db_values['pass'];
+        Db::$connection_data['dbname'] = $db_values['dbname'];
      }
      
      public static function wasError() {
