@@ -96,7 +96,16 @@ class HTML {
        
     }
     
-  public static function input_textarea($cols = 0, $rows = 0, $name = '') {
+    /**
+     * Включает в документ текстовую область
+     * 
+     * @param integer $cols высота области
+     * @param integer $rows ширина области
+     * @param string $name имя области
+     * 
+     * @return void 
+     */
+    public static function input_textarea($cols = 0, $rows = 0, $name = '') {
       
       $return = "<textarea";
       
@@ -113,6 +122,13 @@ class HTML {
       
   }
   
+  /**
+   * Включает в документ внешний CSS
+   * 
+   * @param string $file CSS-файл
+   * @throws Exception
+   * @return void
+   */
   public static function include_css($file) {
       
       $ext = substr($file, 0, -3);
@@ -122,18 +138,36 @@ class HTML {
       echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"$file\">";
   }
   
+  /**
+   * Устанавливает заголовок HTML-документа
+   * 
+   * @param string $title
+   * @return void
+   */
   public static function set_title($title) {
       
       if (!empty($title))
           echo "<title>$title</title>";
   }
   
+  /**
+   * Устанавливает описание в meta
+   * 
+   * @param string $description
+   * @return void
+   */
   public static function set_description($description) {
       
       if (!empty($description))
           echo "<meta name=\"description\" content=$description />";
   }
   
+  /**
+   * Устанавливает ключевые слова в meta
+   * 
+   * @param array $keywords
+   * @return void
+   */
   public static function set_keywords(array $keywords) {
       
       if (!empty($keywords)) {
@@ -143,6 +177,13 @@ class HTML {
       }
   }
   
+  /**
+   * Включает в документ внешний JS-файл
+   * 
+   * @param string $file Файл с JS
+   * @throws Exception
+   * @return void
+   */
   public static function include_js($file) {
       
       $ext = substr($file, 0, -2);
