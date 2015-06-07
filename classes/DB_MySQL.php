@@ -321,6 +321,61 @@ public static function findRowByPK($table, $pkValue, $returnValue = '') {
    
 }
 
+/**
+ * Функция обновляет заданные значения в заданной таблице
+ * 
+ * @param string $table Таблица, значения полей которой должны быть обновлены
+ * @param array $fields_to_update Массив пар "ключ-значение". Ключ - имя поля, значение - новое значение поля
+ * @param array $fields_where Массив пар "ключ значение" полей в условии where.
+ * @param type $and Логика обновления. По умолчанию true, значит условия объединяет логическое "И". В противном случае - "ИЛИ"
+ * 
+ * @return resource
+ * @throws Exception
+ */
+public static function update($table, array $fields_to_update, array $fields_where, $and = true) {
+    
+    if (!DB_MySQL::tableExists($table))
+        throw new Exception("Таблицы $table не существует");
+    
+    if (empty($fields_to_update))
+        throw new Exception("Не заданы поля для обновления");
+    
+    $updQuery = 'UPDATE '.$table;
+    foreach ($fields_to_update as $key => $value) {
+        
+        $updQuery .= ' SET '.$key.' = "' . $value . '"';
+        if ($and)
+            $updQuery .= ' AND ';
+        else 
+            $updQuery .= ' OR ';       
+    }
+    
+    if ($and)
+        $updQuery = substr($updQuery, 0, -5);
+    else
+        $updQuery = substr($updQuery, 0, -4);
+    
+    if (!empty($fields_where)) {
+        
+        $updQuery .= ' WHERE ';
+        foreach ($fields_where as $key=>$value) {
+            $updQuery .= $key.' = "'.$value.'"';
+             if ($and)
+                $updQuery .= ' AND ';
+            else 
+                $updQuery .= ' OR ';     
+        }
+        
+         if ($and)
+            $updQuery = substr($updQuery, 0, -5);
+        else
+            $updQuery = substr($updQuery, 0, -4);
+    }
+    
+    return DB_MySQL::query($updQuery);
+    
+}
+
 }
 
 ?>
