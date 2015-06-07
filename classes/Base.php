@@ -2,17 +2,59 @@
 
 class Base {
     
-    
+    /**
+     * Переменная, в которой хранится путь к классам системы
+     * 
+     * @var string
+     * @access public
+     * @static
+     */
     public static $class_path;
     
+    /**
+     * Расширение php-файла. Можно поменять, к примеру, на .phtml или любое другое
+     * 
+     * @var string
+     * @access public
+     * @static
+     */
     public static $php_ext;
     
+    /**
+     * В этой переменной хранится путь к контроллерам системы
+     * 
+     * @var string
+     * @access public
+     * @static
+     */
     public static $controllers_path;
     
+    /**
+     * Путь к вьюхам
+     * 
+     * @var string
+     * @access public
+     * @static
+     */
     public static $views_path;
     
+    public static $short_views_path;
+    
+    /**
+     * Путь к конфигурационным файлам
+     * 
+     * @var string
+     * @access public
+     * @static
+     */
     public static $config_path;
     
+    /**
+     * Инициализационная функция базового класса
+     * 
+     * @access public
+     * @return void
+     */
     public static function init() {
          $root = $_SERVER['DOCUMENT_ROOT'];
         
@@ -21,6 +63,7 @@ class Base {
         Base::setPHPExt('.php');
         Base::setViewsPath($root . 'views/');
         Base::setConfigPath($root . 'config/');
+        Base::$short_views_path = 'views';
         
     }
 
@@ -64,6 +107,13 @@ class Base {
         return Base::$config_path;
     }
     
+    /**
+     * Чтение конфигурационных файлов
+     * 
+     * @param string $config
+     * @return array
+     * @throws Exception
+     */
     public static function read_config_file($config) {
         
         $path = Base::getConfigPath() . $config . '.ini';
@@ -73,45 +123,17 @@ class Base {
         $parse = parse_ini_file($path);
         return $parse;
     }
-
-    public static function render($path, $params = array()) {
-	if (empty($path)) {
-	    throw new Exception("Cannot load empty view");
-	}
-	
-	$pos = strpos($path, '/');
-	if ($pos === false) {
-	    if (file_exists(Base::getViewsPath() . $path . Base::getPHPExt())) {
-		    include Base::getViewsPath() . $path . Base::getPHPExt();
-	    }
-	    else {
-		throw new Exception("Cannot load layout $path.php");
-	    }
-	}
-
-	else {
-	    $base_path = Base::getViewsPath();
-	    $views = explode("/", $path);
-	    
-	    for ($i = 0;  $i < count($views); $i++) {
-		if (is_dir($base_path . $views[$i] . '/')) {
-		    $base_path .= $views[$i] . '/';
-		}
-
-		else {
-		    include $base_path . $views[$i] . Base::getPHPExt();
-		    break;
-		}
-	    }
-
-	}
-    }
     
+  
+    
+    /**
+     * Автозагрузчик классов
+     * 
+     * @param string $class Класс к загрузке
+     * @throws Exception
+     */
     public static function load_classes($class) {
-        
-       
-        
-    
+  
     $pos = strpos($class, 'Controller');
     if ($pos === false) {
         
