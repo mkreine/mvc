@@ -98,6 +98,14 @@ public static function connect() {
           
 }
 
+/**
+ * Функция выполняет запрос к серверу MySQL. Если передан пустой текст запроса, то он берется из переменной $query класса. 
+ * В случае успешного запроса возвращается его ID или true/false, в зависимости от типа запроса. Если запрос не удался, возвращается false, а в 
+ * соответствующих переменных будет доступен код и текст последней ошибки.
+ * 
+ * @param string $text Текст запроса
+ * @return mixed
+ */
 public static function query($text) {
     if (empty($text)) {
         $text = Db::$query;
@@ -114,6 +122,12 @@ public static function query($text) {
         return false;
 }
 
+/**
+ * Функция-обертка. Возвращает результаты mysql_fetch_array. В случае неуспеха возвращается исключение.
+ * 
+ * @return mixed
+ * @throws Exception
+ */
 public static function fetch() {
     if (!is_resource(Db::$query_id))
         throw new Exception("Cannot analyze non-resource variable");
@@ -122,6 +136,12 @@ public static function fetch() {
     
 }
 
+/**
+ * Возвращает подробную информацию о каждом поле запроса.
+ * 
+ * @return object
+ * @throws Exception
+ */
 public static function fetchFields() {
    
     if (!is_resource(Db::$query_id))
