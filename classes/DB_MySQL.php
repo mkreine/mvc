@@ -133,7 +133,7 @@ public static function select($table, $fields = '', $where = '', $and = true) {
     }
     
     //return $selQuery;
-    DB_MySQL::query($selQuery);
+    return DB_MySQL::query($selQuery);
     
 }
 
