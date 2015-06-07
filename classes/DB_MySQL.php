@@ -47,8 +47,7 @@ public static function selectDB($dbname = '') {
  * @return array
  * @throws Exception
  */
-public static function getTables($dbname = '')
-{   
+public static function getTables($dbname = '') {   
     if(empty($dbname))
         $dbname = Db::$connection_data['dbname'];
     
@@ -66,8 +65,76 @@ public static function getTables($dbname = '')
     
     return $tables;
     
+}
+
+/**
+ * Проверяет, существует ли таблица в данной базе данных. Возвращает true в случае существования таблицы, false в противном случае.
+ * 
+ * @param string $tablename Таблица, существование которой необходимо проверить
+ * @param string $dbname База данных, в которой должна находиться искомая таблица
+ * @return boolean
+ */
+public static function tableExists($tablename, $dbname = '') {
     
-   
+    $tablename = trim($tablename);
+    $tables = DB_MySQL::getTables();
+    
+    return in_array($tablename, $tables);
+}
+
+/**
+ * Функция выполняет запрос SELECT к базе данных. 
+ * 
+ * @param string $table Таблица, из которой брать данные. Если такой таблицы нет, возвращается исключение
+ * @param mixed $fields Требуемые поля. Если передана пустая строка, будут браться все поля, в противном случае должен быть массив полей. Если это не так, будет передано исключение
+ * @param mixed $where Условие для отбора. Если не пустая строка, то массив вида array('key' => 'value')
+ * @param mixed $and Логика соединения AND или OR
+ * @throws Exception
+ * @return mixed
+ */
+public static function select($table, $fields = '', $where = '', $and = true) {
+    
+    if (!DB_MySQL::tableExists($table))
+        throw new Exception("Таблицы $table не существует");
+    
+    if (empty($fields)) {
+        $fields = '*';
+        $selQuery = 'SELECT ' . $fields . ' FROM ' . $table;
+    }
+    
+    else {
+        if (!is_array($fields))
+            throw new Exception("Поля должны быть переданы в виде массива");
+        
+        $str = implode(", ", $fields);
+        $selQuery = 'SELECT ' . $str . ' FROM ' . $table;
+    }
+    
+    if (!empty($where)) {
+        
+        $selQuery .= ' WHERE ';
+        $size = count($where);
+        
+        $i = -1;
+        foreach ($where as $key => $value) {
+            $i++;
+            $selQuery .= $key . ' = ' . $value;       
+            
+            if ($and)
+                $selQuery .= ' AND ';
+            else
+                $selQuery .= ' OR ';
+        }
+        
+        if ($and)
+            $selQuery = substr($selQuery, 0, -5);
+        else
+            $selQuery = substr($selQuery, 0, -4);
+    }
+    
+    //return $selQuery;
+    DB_MySQL::query($selQuery);
+    
 }
 
 /**
